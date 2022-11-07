@@ -100,6 +100,16 @@ public class GraphM {
         return vertexA;
     }
 
+    List<Commit> getcommits(List<Commit> allCommits,int startTime, int endTime){
+        List<Commit> currentCommits = new ArrayList<>();
+        for(Commit commitWindow: allCommits){
+            while(commitWindow.commitTime>startTime && commitWindow.commitTime<endTime){
+                currentCommits.add(commitWindow);
+            }
+        }
+        return currentCommits;
+    }
+
 //    void getVertices(){
 //        Set<String> vertices = new LinkedHashSet<>();
 //        for(Commit currentC : allC){

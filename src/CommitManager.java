@@ -1,4 +1,11 @@
 import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Comparator;
+import static java.util.stream.Collectors.*;
+import static java.util.Map.Entry.*;
+
 
 public class CommitManager {
 
@@ -17,9 +24,9 @@ public class CommitManager {
     ) throws IllegalArgumentException{
         Commit newCommit = new Commit(developer, commitTime, Task, commitFiles);
         allC.add(newCommit);
-        //g1.createGraph(allC);
+        List<Commit> currentWindow = g1.getcommits(allC,startTime,endTime);
+        g1.createGraph(currentWindow);
         //g1.getVertices(allC);
-
     }
 
    Set<Set<String>> softwareComponents(){
@@ -47,17 +54,28 @@ public class CommitManager {
                             }
                         }
                     }
-                    else {
-                        if(j == matrix.length-1){
-
-
+                    else if(j == matrix.length-1 && individualSet.contains(allvertices.get(i))==false){
+                            components.add(individualSet);
+                            individualSet = new LinkedHashSet<>();
                             individualSet.add(allvertices.get(i));
-                            //individualSet.retainAll(allvertices);
-                            if(individualSet.size()==1){
-                                components.add(individualSet);
-                                individualSet = new LinkedHashSet<>();
-                            }
+
+//                            if(individualSet.contains(allvertices.get(i))==false){
+//                                components.add(individualSet);
+//                                individualSet = new LinkedHashSet<>();
+//                            }
+
+//                            individualSet.add(allvertices.get(i));
+//                            individualSet.retainAll(allvertices);
+//                            if(individualSet.size()==1){
+//                                components.add(individualSet);
+//                                individualSet = new LinkedHashSet<>();
+//                            }
                         }
+                    else if(i ==matrix.length-1 && j == matrix.length-1){
+                        components.add(individualSet);
+                        individualSet = new LinkedHashSet<>();
+                        individualSet.add(allvertices.get(i));
+                    }
 
 //                        if(individualSet.isEmpty()==true){
 //                            individualSet.add(allvertices.get(i));
@@ -75,7 +93,7 @@ public class CommitManager {
 //                                    individualSet = new LinkedHashSet<>();
 //                                }
 //                            }
-                        }
+                        //}
 
 //                        if(individualSet.contains(allvertices.get(j))==false){
 //
@@ -105,7 +123,9 @@ public class CommitManager {
 //                    }
                 }
             }
-        //components.add((individualSet));
+        if(!individualSet.isEmpty()){
+            components.add((individualSet));
+        }
         return components;
     }
         //components.add(individualSet);
@@ -211,6 +231,213 @@ public class CommitManager {
        System.out.println(bugFile);
        System.out.println(bugFiles);
        return bugFiles;
+
+    }
+
+    Set<String> broadFeatures(int threshold){
+        Set<String> broadFeatures = new LinkedHashSet<>();
+        Map<String, Set<String>> file = new LinkedHashMap<>();
+        for (Commit currentC : allC) {
+            String TaskInitial = String.valueOf(currentC.Task.charAt(0));
+            if(TaskInitial.equals("F")){
+                if(file.containsKey(currentC.Task)){
+                    Set<String> currentFile = file.get(currentC.Task);
+                    currentFile.addAll(currentC.commitFiles);
+                    file.put(currentC.Task, currentFile);
+                }
+                else{
+                    file.put(currentC.Task, currentC.commitFiles);
+                }
+            }
+        }
+
+        Set<Set<String>> currentC = components;;
+
+        for( Map.Entry<String, Set<String>> currentmap : file.entrySet()){
+            int count=0;
+            String currentKey = currentmap.getKey();
+            Set<String> currentValue = currentmap.getValue();
+            for(Set<String> currentcomponent: currentC){
+                //Set<String> currentFiles = currentValue;
+                currentValue.retainAll(currentcomponent);
+                if(currentValue.size()>0){
+                    count++;
+                }
+            }
+            if(count==threshold){
+                broadFeatures.add(currentmap.getKey());
+            }
+//            for(Set<String> currentF: file.values()){
+//                currentF.retainAll(currentcomponent);
+//                if(currentF.size()>0){
+//                    count++;
+//                }
+//            }
+        }
+        System.out.println(file);
+        System.out.println(broadFeatures);
+        return broadFeatures;
+    }
+
+    Set<String>  experts (int threshold){
+        Set<String> experts = new LinkedHashSet<>();
+        Map<String, Set<String>> file = new LinkedHashMap<>();
+        for (Commit currentC : allC) {
+            if(file.containsKey(currentC.developer)){
+                    Set<String> currentFile = file.get(currentC.developer);
+                    currentFile.addAll(currentC.commitFiles);
+                    file.put(currentC.developer, currentFile);
+                }
+                else{
+                    file.put(currentC.developer, currentC.commitFiles);
+                }
+            }
+        Set<Set<String>> currentC = components;
+        for( Map.Entry<String, Set<String>> currentmap : file.entrySet()){
+            int count=0;
+            String currentKey = currentmap.getKey();
+            Set<String> currentValue = currentmap.getValue();
+            for(Set<String> currentcomponent: currentC){
+                //Set<String> currentFiles = currentValue;
+                currentValue.retainAll(currentcomponent);
+                if(currentValue.size()>0){
+                    count++;
+                }
+            }
+            if(count==threshold){
+                experts.add(currentmap.getKey());
+            }
+//            for(Set<String> currentF: file.values()){
+//                currentF.retainAll(currentcomponent);
+//                if(currentF.size()>0){
+//                    count++;
+//                }
+//            }
+        }
+        System.out.println(file);
+
+        System.out.println(experts);
+        return experts;
+
+    }
+
+    List<String> busyClasses (int limit){
+        List<String> busyClasses = new ArrayList<>();
+
+        Map<String, Integer> fileFrequency = new HashMap<>();
+        for (Commit currentC : allC) {
+            Iterator<String> it1 = currentC.commitFiles.iterator();
+            while (it1.hasNext()) {
+                String currentFile = it1.next();
+                if(fileFrequency.containsKey(currentFile)){
+                    int freq = fileFrequency.get(currentFile);
+                    fileFrequency.put(currentFile,freq+1);
+                }
+                else{
+                    fileFrequency.put(currentFile,1);
+                }
+            }
+        }
+        //https://www.javacodegeeks.com/2017/09/java-8-sorting-hashmap-values-ascending-descending-order.html#:~:text=In%20order%20to%20sort%20in,reverseOrder()%20or%20Comparator.
+        Map<String,Integer>sortedFiles = fileFrequency
+                .entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(comparingByValue()))
+                .collect(
+                        toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                LinkedHashMap::new));
+        int count=0;
+        List<Integer> valuesH = new ArrayList<>();
+
+//        for(Map.Entry<String, Integer> entry: sortedFiles.entrySet()) {
+//            while (count < limit) {
+//                valuesH.add(entry.getValue());
+//                count++;
+//            }
+//        }
+        Iterator<Map.Entry<String,Integer>> iterator = sortedFiles.entrySet().iterator();
+        while (iterator.hasNext() && count<limit) {
+            Integer currentFile = iterator.next().getValue();
+            valuesH.add(currentFile);
+            count++;
+//            if(count==limit-1){
+//                currentFile.equals(iterator.next().getKey()){
+//                    valuesH.add(Integer.valueOf(currentFile));
+//                }
+//            }
+        }
+        System.out.println(valuesH);
+//        while(count<limit){
+//            for(Integer currentValue: sortedFiles.values()){
+//                valuesH.add(currentValue);
+//                count++;
+//            }
+//            for(Map.Entry<String, Integer> entry: sortedFiles.entrySet()) {
+//                valuesH.add(entry.getValue());
+//                count++;
+//            }
+
+
+//        for(Map.Entry<String, Integer> entry: sortedFiles.entrySet()) {
+//            String currentFile = entry.getKey();
+//            Integer fileCount = entry.getValue();
+//            for(Integer currentValue: valuesH){
+//                if(currentValue==fileCount){
+//                    busyClasses.add(currentFile);
+//                }
+//            }
+//        }
+
+//        for(Integer currentValue: valuesH){
+//            for(Map.Entry<String, Integer> entry: sortedFiles.entrySet()){
+//                String currentFile = entry.getKey();
+//                Integer fileCount = entry.getValue();
+//                if(currentValue == fileCount){
+//                    busyClasses.add(currentFile);
+//                }
+//                if(busyClasses.size() == limit){
+//                    busyClasses.get(limit-1).equals(entry.getKey());
+//                    busyClasses.add(currentFile);
+//                }
+//
+//            }
+//        }
+
+        for(Integer currentValue: valuesH) {
+            String currentFile = null;
+            //sortedFiles.containsValue(currentValue);
+            for (Map.Entry<String, Integer> entry : sortedFiles.entrySet()) {
+                if (Objects.equals(currentValue, entry.getValue())) {
+                    currentFile = entry.getKey();
+                    busyClasses.add(currentFile);
+                }
+
+            }
+        }
+
+
+//            Iterator<Map.Entry<String , Integer>> currentFile = sortedFiles.entrySet().iterator();
+//            while(currentFile.hasNext()){
+//                Map.Entry map = currentFile.next();
+//                busyClasses.add(map.getKey(currentValue));
+//            }
+//        }
+
+//        for(Integer currentValue: valuesH){
+//            for(String key : getKeys(fileFrequency,currentValue))
+//            String currentFile = fileFrequency.getKeys;
+//            busyClasses.add(fileFrequency.get)
+//        }
+
+
+
+
+        System.out.println(fileFrequency);
+        System.out.println(sortedFiles);
+        System.out.println(busyClasses);
+
+        return busyClasses;
+
 
     }
 
