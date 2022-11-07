@@ -49,6 +49,8 @@ public class CommitManager {
                     }
                     else {
                         if(j == matrix.length-1){
+
+
                             individualSet.add(allvertices.get(i));
                             //individualSet.retainAll(allvertices);
                             if(individualSet.size()==1){
@@ -118,9 +120,98 @@ public class CommitManager {
         }
    }
 
-   Set<String> repetionInBugs(int threshold){
-       Set<String> ind = new LinkedHashSet<>();
-       return ind;
+   Set<String> repetionInBugs(int threshold) {
+        Set<String> bugFiles = new LinkedHashSet<>();
+       Map<String, Integer> fileFrequency = new LinkedHashMap<>();
+       //Map<String, List<String>> bugFile = new LinkedHashMap<>();
+       Map<String, Map<String, Integer>> bugFile = new LinkedHashMap<>();
+       for (Commit currentC : allC) {
+           String TaskInitial = String.valueOf(currentC.Task.charAt(0));
+           if(TaskInitial.equals("B")){
+               Iterator<String> it1 = currentC.commitFiles.iterator();
+               while (it1.hasNext()) {
+
+                   String currentFile = it1.next();
+                   if(bugFile.containsKey(currentC.Task)){
+                       fileFrequency = new LinkedHashMap<>();
+                       fileFrequency = bugFile.get(currentC.Task);
+                       if(fileFrequency.containsKey(currentFile)){
+                           int frequency = fileFrequency.get(currentFile);
+                           fileFrequency.put(currentFile,frequency +1);
+                       }
+                       else{
+                           fileFrequency.put(currentFile,1);
+                       }
+                   }
+                   else{
+                       fileFrequency = new LinkedHashMap<>();
+                       fileFrequency.put(currentFile,1);
+                       bugFile.put(currentC.Task, fileFrequency);
+                   }
+               }
+               //bugFile.put(currentC.Task, fileFrequency);
+           }
+
+           for(String bug: bugFile.keySet()){
+               Map<String, Integer> currentFiles = bugFile.get(bug);
+               int maxF = 0;
+               for(Integer fileF: currentFiles.values()){
+                   if(maxF<fileF){
+                       maxF = fileF;
+                   }
+               }
+               if(maxF>=threshold){
+                   bugFiles.add(bug);
+               }
+           }
+//               List<String> files = new ArrayList<>();
+//                   Iterator<String> it1 = currentC.commitFiles.iterator();
+//                   while (it1.hasNext()) {
+//                       files.add(it1.next());
+//                   }
+//                   bugFile.put(currentC.Task, files);
+//               }
+//
+//           for (Map.Entry current : bugFile.entrySet()){
+//               List<String> files = (List<String>) current.getValue();
+//               if (currentC.Task.equals(current)) {
+//                   Iterator<String> it1 = currentC.commitFiles.iterator();
+//                   while (it1.hasNext()) {
+//                       files.add(it1.next());
+//                   }
+//                   bugFile.put(currentC.Task, files);
+//               }
+//           }
+//
+
+
+//           if (bugFile.isEmpty()) {
+//               if (TaskInital.equals("B")) {
+//                   List<String> files = new ArrayList<>();
+//                   Iterator<String> it1 = currentC.commitFiles.iterator();
+//                   while (it1.hasNext()) {
+//                       files.add(it1.next());
+//                   }
+//                   bugFile.put(currentC.Task, files);
+//               }
+//           } else {
+//               for (Map.Entry current : bugFile.entrySet()) {
+//                   List<String> files = (List<String>) current.getValue();
+//                   if (currentC.Task.equals(current)) {
+//                       Iterator<String> it1 = currentC.commitFiles.iterator();
+//                       while (it1.hasNext()) {
+//                           files.add(it1.next());
+//                       }
+//                       bugFile.put(currentC.Task, files);
+//                   }
+//               }
+//           }
+
+       }
+       System.out.println(bugFile);
+       System.out.println(bugFiles);
+       return bugFiles;
+
     }
 
 

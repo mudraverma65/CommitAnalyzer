@@ -12,24 +12,25 @@ public class A3 {
 //        s1.add("C");
         commitM.addCommit("mudra", 10, "B-190",new LinkedHashSet<>(Arrays.asList("A","B","C","D")));
         commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("A","B","C")));
-        commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("A","B")));
-        commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("A","D")));
-        commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("C","B")));
-        commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("D","C")));
+        commitM.addCommit("mudra", 12, "B-190",new LinkedHashSet<>(Arrays.asList("A","B")));
+        commitM.addCommit("mudra", 12, "B-190",new LinkedHashSet<>(Arrays.asList("A","D")));
+        commitM.addCommit("mudra", 12, "B-199",new LinkedHashSet<>(Arrays.asList("C","B")));
+        commitM.addCommit("mudra", 12, "B-190",new LinkedHashSet<>(Arrays.asList("D","C")));
         commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("B")));
         commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("E","A")));
-        commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("B","D")));
+        commitM.addCommit("mudra", 12, "B-193",new LinkedHashSet<>(Arrays.asList("B","D")));
         commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("A","D")));
         commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("B","C","D")));
-        commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("E","A")));
+        commitM.addCommit("mudra", 12, "B-195",new LinkedHashSet<>(Arrays.asList("E","A")));
         commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("A","B","E")));
         commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("D","E")));
-        commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("D","C")));
+        commitM.addCommit("mudra", 12, "B-194",new LinkedHashSet<>(Arrays.asList("D","C")));
         commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("A","B")));
-        commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("B","D")));
+        commitM.addCommit("mudra", 12, "B-199",new LinkedHashSet<>(Arrays.asList("B","D")));
         commitM.componentMinimum(5);
         Set<Set<String>> s3 = commitM.softwareComponents();
         System.out.println(s3);
+        commitM.repetionInBugs(3);
         // commitM.getVertices();
     }
 }
