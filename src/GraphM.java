@@ -100,15 +100,21 @@ public class GraphM {
         return vertexA;
     }
 
-    List<Commit> getcommits(List<Commit> allCommits,int startTime, int endTime){
+    List<Commit> getcommit(List<Commit> allCommits,int startTime, int endTime){
         List<Commit> currentCommits = new ArrayList<>();
-        for(Commit commitWindow: allCommits){
-            while(commitWindow.commitTime>startTime && commitWindow.commitTime<endTime){
-                currentCommits.add(commitWindow);
+        if(endTime!=0){
+            for(Commit commitWindow: allCommits){
+                if(commitWindow.commitTime>=startTime && commitWindow.commitTime<=endTime){
+                    currentCommits.add(commitWindow);
+                }
             }
+        } else if (endTime == 0) {
+            return allCommits;
         }
         return currentCommits;
     }
+
+
 
 //    void getVertices(){
 //        Set<String> vertices = new LinkedHashSet<>();

@@ -24,18 +24,14 @@ public class CommitManager {
     ) throws IllegalArgumentException{
         Commit newCommit = new Commit(developer, commitTime, Task, commitFiles);
         allC.add(newCommit);
-        List<Commit> currentWindow = g1.getcommits(allC,startTime,endTime);
-        g1.createGraph(currentWindow);
-        //g1.getVertices(allC);
     }
 
    Set<Set<String>> softwareComponents(){
-        List<String> allvertices = g1.getVertex(allC);
+        List<Commit> currentWindow = g1.getcommit(allC,startTime,endTime);
+        List<String> allvertices = g1.getVertex(currentWindow);
         Set<String> individualSet = new LinkedHashSet<>();
-        //individualSet.add(allvertices.get(0)); //not rewuired
-        matrix = g1.createGraph(allC);
+        matrix = g1.createGraph(currentWindow);
         for(int i = 0; i<matrix.length; i++){
-            //if(individualSet.contains(allvertices.get(i))){ //check placement
                 for(int j = 0; j<matrix.length; j++){
                     if(matrix[i][j] >= threshold){
                         if(individualSet.contains(allvertices.get(i))) {
@@ -43,8 +39,6 @@ public class CommitManager {
                         }
                         else {
                             if(individualSet.isEmpty() == true){
-                               // components.add(individualSet);
-                                // individualSet = new LinkedHashSet<>();
                                 individualSet.add(allvertices.get(i));
                             }
                             else{
@@ -58,69 +52,12 @@ public class CommitManager {
                             components.add(individualSet);
                             individualSet = new LinkedHashSet<>();
                             individualSet.add(allvertices.get(i));
-
-//                            if(individualSet.contains(allvertices.get(i))==false){
-//                                components.add(individualSet);
-//                                individualSet = new LinkedHashSet<>();
-//                            }
-
-//                            individualSet.add(allvertices.get(i));
-//                            individualSet.retainAll(allvertices);
-//                            if(individualSet.size()==1){
-//                                components.add(individualSet);
-//                                individualSet = new LinkedHashSet<>();
-//                            }
                         }
                     else if(i ==matrix.length-1 && j == matrix.length-1){
                         components.add(individualSet);
                         individualSet = new LinkedHashSet<>();
                         individualSet.add(allvertices.get(i));
                     }
-
-//                        if(individualSet.isEmpty()==true){
-//                            individualSet.add(allvertices.get(i));
-//                            if(!components.contains(individualSet)) {
-//                                components.add(individualSet);
-//                                individualSet = new LinkedHashSet<>();
-//                            }
-//                        }
-
-
-
-//                            for(Set<String> s1: components){
-//                                if(!s1.contains(individualSet)){
-//                                    components.add(individualSet);
-//                                    individualSet = new LinkedHashSet<>();
-//                                }
-//                            }
-                        //}
-
-//                        if(individualSet.contains(allvertices.get(j))==false){
-//
-//                        }
-                    //}
-//                    else{
-//                        individualSet.add(allvertices.get(j));
-//                        if(individualSet.isEmpty()){
-//                            individualSet.add(allvertices.get(i));
-//                        }
-////                        while(components.isEmpty()==false){
-////                            for (Set<String> s1: components) {
-////                                if(s1.contains(allvertices.get(i))==false){
-////                                    individualSet.add(allvertices.get(i));
-////                                    components.add(individualSet);
-////                                    individualSet = new LinkedHashSet<>();
-////                                }
-////                            }
-////                        }
-////
-////                        if(individualSet.contains(allvertices.get(i))==false){
-////
-////                        }
-//                        individualSet.add(allvertices.get(j));
-//                        components.add(individualSet);
-//                        individualSet = new LinkedHashSet<>();
-//                    }
                 }
             }
         if(!individualSet.isEmpty()){
@@ -128,7 +65,6 @@ public class CommitManager {
         }
         return components;
     }
-        //components.add(individualSet);
 
    boolean componentMinimum(int threshold){
         if(threshold>0){
@@ -141,11 +77,11 @@ public class CommitManager {
    }
 
    Set<String> repetionInBugs(int threshold) {
+       List<Commit> currentWindow = g1.getcommit(allC,startTime,endTime);
         Set<String> bugFiles = new LinkedHashSet<>();
        Map<String, Integer> fileFrequency = new LinkedHashMap<>();
-       //Map<String, List<String>> bugFile = new LinkedHashMap<>();
        Map<String, Map<String, Integer>> bugFile = new LinkedHashMap<>();
-       for (Commit currentC : allC) {
+       for (Commit currentC : currentWindow) {
            String TaskInitial = String.valueOf(currentC.Task.charAt(0));
            if(TaskInitial.equals("B")){
                Iterator<String> it1 = currentC.commitFiles.iterator();
@@ -169,7 +105,6 @@ public class CommitManager {
                        bugFile.put(currentC.Task, fileFrequency);
                    }
                }
-               //bugFile.put(currentC.Task, fileFrequency);
            }
 
            for(String bug: bugFile.keySet()){
@@ -184,60 +119,17 @@ public class CommitManager {
                    bugFiles.add(bug);
                }
            }
-//               List<String> files = new ArrayList<>();
-//                   Iterator<String> it1 = currentC.commitFiles.iterator();
-//                   while (it1.hasNext()) {
-//                       files.add(it1.next());
-//                   }
-//                   bugFile.put(currentC.Task, files);
-//               }
-//
-//           for (Map.Entry current : bugFile.entrySet()){
-//               List<String> files = (List<String>) current.getValue();
-//               if (currentC.Task.equals(current)) {
-//                   Iterator<String> it1 = currentC.commitFiles.iterator();
-//                   while (it1.hasNext()) {
-//                       files.add(it1.next());
-//                   }
-//                   bugFile.put(currentC.Task, files);
-//               }
-//           }
-//
-
-
-//           if (bugFile.isEmpty()) {
-//               if (TaskInital.equals("B")) {
-//                   List<String> files = new ArrayList<>();
-//                   Iterator<String> it1 = currentC.commitFiles.iterator();
-//                   while (it1.hasNext()) {
-//                       files.add(it1.next());
-//                   }
-//                   bugFile.put(currentC.Task, files);
-//               }
-//           } else {
-//               for (Map.Entry current : bugFile.entrySet()) {
-//                   List<String> files = (List<String>) current.getValue();
-//                   if (currentC.Task.equals(current)) {
-//                       Iterator<String> it1 = currentC.commitFiles.iterator();
-//                       while (it1.hasNext()) {
-//                           files.add(it1.next());
-//                       }
-//                       bugFile.put(currentC.Task, files);
-//                   }
-//               }
-//           }
-
        }
        System.out.println(bugFile);
        System.out.println(bugFiles);
        return bugFiles;
-
     }
 
     Set<String> broadFeatures(int threshold){
+        List<Commit> currentWindow = g1.getcommit(allC,startTime,endTime);
         Set<String> broadFeatures = new LinkedHashSet<>();
         Map<String, Set<String>> file = new LinkedHashMap<>();
-        for (Commit currentC : allC) {
+        for (Commit currentC : currentWindow) {
             String TaskInitial = String.valueOf(currentC.Task.charAt(0));
             if(TaskInitial.equals("F")){
                 if(file.containsKey(currentC.Task)){
@@ -258,7 +150,6 @@ public class CommitManager {
             String currentKey = currentmap.getKey();
             Set<String> currentValue = currentmap.getValue();
             for(Set<String> currentcomponent: currentC){
-                //Set<String> currentFiles = currentValue;
                 currentValue.retainAll(currentcomponent);
                 if(currentValue.size()>0){
                     count++;
@@ -267,12 +158,6 @@ public class CommitManager {
             if(count==threshold){
                 broadFeatures.add(currentmap.getKey());
             }
-//            for(Set<String> currentF: file.values()){
-//                currentF.retainAll(currentcomponent);
-//                if(currentF.size()>0){
-//                    count++;
-//                }
-//            }
         }
         System.out.println(file);
         System.out.println(broadFeatures);
@@ -280,9 +165,10 @@ public class CommitManager {
     }
 
     Set<String>  experts (int threshold){
+        List<Commit> currentWindow = g1.getcommit(allC,startTime,endTime);
         Set<String> experts = new LinkedHashSet<>();
         Map<String, Set<String>> file = new LinkedHashMap<>();
-        for (Commit currentC : allC) {
+        for (Commit currentC : currentWindow) {
             if(file.containsKey(currentC.developer)){
                     Set<String> currentFile = file.get(currentC.developer);
                     currentFile.addAll(currentC.commitFiles);
@@ -307,12 +193,6 @@ public class CommitManager {
             if(count==threshold){
                 experts.add(currentmap.getKey());
             }
-//            for(Set<String> currentF: file.values()){
-//                currentF.retainAll(currentcomponent);
-//                if(currentF.size()>0){
-//                    count++;
-//                }
-//            }
         }
         System.out.println(file);
 
@@ -323,9 +203,10 @@ public class CommitManager {
 
     List<String> busyClasses (int limit){
         List<String> busyClasses = new ArrayList<>();
+        List<Commit> currentWindow = g1.getcommit(allC,startTime,endTime);
 
         Map<String, Integer> fileFrequency = new HashMap<>();
-        for (Commit currentC : allC) {
+        for (Commit currentC : currentWindow) {
             Iterator<String> it1 = currentC.commitFiles.iterator();
             while (it1.hasNext()) {
                 String currentFile = it1.next();
@@ -347,105 +228,36 @@ public class CommitManager {
                         toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
                                 LinkedHashMap::new));
         int count=0;
-        List<Integer> valuesH = new ArrayList<>();
+        List<String> valuesH = new ArrayList<>();
 
-//        for(Map.Entry<String, Integer> entry: sortedFiles.entrySet()) {
-//            while (count < limit) {
-//                valuesH.add(entry.getValue());
-//                count++;
-//            }
-//        }
         Iterator<Map.Entry<String,Integer>> iterator = sortedFiles.entrySet().iterator();
         while (iterator.hasNext() && count<limit) {
-            Integer currentFile = iterator.next().getValue();
+           // Integer counter = iterator.next().getValue();
+            String currentFile = iterator.next().getKey();
             valuesH.add(currentFile);
+            busyClasses.add(currentFile);
             count++;
-//            if(count==limit-1){
-//                currentFile.equals(iterator.next().getKey()){
-//                    valuesH.add(Integer.valueOf(currentFile));
-//                }
-//            }
         }
-        System.out.println(valuesH);
-//        while(count<limit){
-//            for(Integer currentValue: sortedFiles.values()){
-//                valuesH.add(currentValue);
-//                count++;
-//            }
-//            for(Map.Entry<String, Integer> entry: sortedFiles.entrySet()) {
-//                valuesH.add(entry.getValue());
-//                count++;
-//            }
 
-
-//        for(Map.Entry<String, Integer> entry: sortedFiles.entrySet()) {
-//            String currentFile = entry.getKey();
-//            Integer fileCount = entry.getValue();
-//            for(Integer currentValue: valuesH){
-//                if(currentValue==fileCount){
-//                    busyClasses.add(currentFile);
-//                }
-//            }
-//        }
-
-//        for(Integer currentValue: valuesH){
-//            for(Map.Entry<String, Integer> entry: sortedFiles.entrySet()){
-//                String currentFile = entry.getKey();
-//                Integer fileCount = entry.getValue();
-//                if(currentValue == fileCount){
-//                    busyClasses.add(currentFile);
-//                }
-//                if(busyClasses.size() == limit){
-//                    busyClasses.get(limit-1).equals(entry.getKey());
-//                    busyClasses.add(currentFile);
-//                }
-//
-//            }
-//        }
-
-        for(Integer currentValue: valuesH) {
-            String currentFile = null;
-            //sortedFiles.containsValue(currentValue);
+        if(busyClasses.isEmpty()==false) {
+            String lastFile = busyClasses.get(busyClasses.size() - 1);
+            int frequency = sortedFiles.get(lastFile);
             for (Map.Entry<String, Integer> entry : sortedFiles.entrySet()) {
-                if (Objects.equals(currentValue, entry.getValue())) {
-                    currentFile = entry.getKey();
-                    busyClasses.add(currentFile);
+                if (entry.getValue() == frequency) {
+                    if (!busyClasses.contains(entry.getKey())) {
+                        busyClasses.add(entry.getKey());
+                    }
                 }
-
             }
         }
-
-
-//            Iterator<Map.Entry<String , Integer>> currentFile = sortedFiles.entrySet().iterator();
-//            while(currentFile.hasNext()){
-//                Map.Entry map = currentFile.next();
-//                busyClasses.add(map.getKey(currentValue));
-//            }
-//        }
-
-//        for(Integer currentValue: valuesH){
-//            for(String key : getKeys(fileFrequency,currentValue))
-//            String currentFile = fileFrequency.getKeys;
-//            busyClasses.add(fileFrequency.get)
-//        }
-
-
-
-
-        System.out.println(fileFrequency);
-        System.out.println(sortedFiles);
-        System.out.println(busyClasses);
-
         return busyClasses;
-
-
     }
 
 
     boolean setTimeWindow(int startTime, int endTime) {
         boolean val = true;
         try{
-            while(endTime>startTime){
+            if(endTime>startTime){
                 this.startTime = startTime;
                 this.endTime = endTime;
             }

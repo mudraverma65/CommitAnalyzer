@@ -1,7 +1,4 @@
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 public class A3 {
     public static void main(String[] args){
@@ -10,23 +7,24 @@ public class A3 {
 //        s1.add("A");
 //        s1.add("B");
 //        s1.add("C");
+        commitM.setTimeWindow(0,11);
         commitM.addCommit("mudra", 10, "B-190",new LinkedHashSet<>(Arrays.asList("A","B","C","D")));
-        commitM.addCommit("pallavi", 12, "B-192",new LinkedHashSet<>(Arrays.asList("A","B","C")));
-        commitM.addCommit("alen", 12, "B-190",new LinkedHashSet<>(Arrays.asList("A","B")));
-        commitM.addCommit("dhruv", 12, "B-190",new LinkedHashSet<>(Arrays.asList("A","D")));
-        commitM.addCommit("rishi", 12, "B-199",new LinkedHashSet<>(Arrays.asList("C","B")));
-        commitM.addCommit("muskan", 12, "B-190",new LinkedHashSet<>(Arrays.asList("D","C")));
-        commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("B")));
-        commitM.addCommit("ashwati", 12, "B-192",new LinkedHashSet<>(Arrays.asList("E","A")));
-        commitM.addCommit("mudra", 12, "B-193",new LinkedHashSet<>(Arrays.asList("B","D")));
-        commitM.addCommit("dhruv", 12, "B-192",new LinkedHashSet<>(Arrays.asList("A","D")));
-        commitM.addCommit("mudra", 12, "B-192",new LinkedHashSet<>(Arrays.asList("B","C","D")));
-        commitM.addCommit("muskan", 12, "B-195",new LinkedHashSet<>(Arrays.asList("E","A")));
-        commitM.addCommit("rishi", 12, "B-192",new LinkedHashSet<>(Arrays.asList("A","B","E")));
-        commitM.addCommit("pallavi", 12, "B-192",new LinkedHashSet<>(Arrays.asList("D","E")));
-        commitM.addCommit("milind", 12, "B-194",new LinkedHashSet<>(Arrays.asList("D","C")));
-        commitM.addCommit("limysh", 12, "B-192",new LinkedHashSet<>(Arrays.asList("A","B")));
-        commitM.addCommit("mudra", 12, "B-199",new LinkedHashSet<>(Arrays.asList("B","D")));
+        commitM.addCommit("pallavi", 15, "B-192",new LinkedHashSet<>(Arrays.asList("A","B","C")));
+        commitM.addCommit("alen", 10, "B-190",new LinkedHashSet<>(Arrays.asList("A","B")));
+        commitM.addCommit("dhruv", 10, "B-190",new LinkedHashSet<>(Arrays.asList("A","D")));
+        commitM.addCommit("rishi", 10, "B-199",new LinkedHashSet<>(Arrays.asList("C","B")));
+        commitM.addCommit("muskan", 10, "B-190",new LinkedHashSet<>(Arrays.asList("D","C")));
+        commitM.addCommit("mudra", 10, "B-192",new LinkedHashSet<>(Arrays.asList("B")));
+        commitM.addCommit("ashwati", 10, "B-192",new LinkedHashSet<>(Arrays.asList("E","A")));
+        commitM.addCommit("mudra", 10, "B-193",new LinkedHashSet<>(Arrays.asList("B","D")));
+        commitM.addCommit("dhruv", 10, "B-192",new LinkedHashSet<>(Arrays.asList("A","D")));
+        commitM.addCommit("mudra", 10, "B-192",new LinkedHashSet<>(Arrays.asList("B","C","D")));
+        commitM.addCommit("muskan", 10, "B-195",new LinkedHashSet<>(Arrays.asList("E","A")));
+        commitM.addCommit("rishi", 10, "B-192",new LinkedHashSet<>(Arrays.asList("A","B","E")));
+        commitM.addCommit("pallavi", 10, "B-192",new LinkedHashSet<>(Arrays.asList("D","E")));
+        commitM.addCommit("milind", 10, "B-194",new LinkedHashSet<>(Arrays.asList("D","C")));
+        commitM.addCommit("limysh", 10, "B-192",new LinkedHashSet<>(Arrays.asList("A","B")));
+        commitM.addCommit("mudra", 10, "B-199",new LinkedHashSet<>(Arrays.asList("B","D")));
 
         commitM.addCommit("alen", 12, "F-192",new LinkedHashSet<>(Arrays.asList("A","B","C")));
         commitM.addCommit("mudra", 12, "F-190",new LinkedHashSet<>(Arrays.asList("A","B")));
@@ -48,16 +46,26 @@ public class A3 {
         commitM.addCommit("rishi", 12, "F-199",new LinkedHashSet<>(Arrays.asList("A")));
         commitM.addCommit("rishi", 12, "F-199",new LinkedHashSet<>(Arrays.asList("A")));
         commitM.addCommit("rishi", 12, "F-199",new LinkedHashSet<>(Arrays.asList("A")));
+        commitM.setTimeWindow(0,20);
+        commitM.clearTimeWindow();
+        commitM.componentMinimum(8);
+        Set<Set<String>> c= commitM.softwareComponents();
+        System.out.println(c);
+        Set<String> stringSet = commitM.repetionInBugs(3);
+        Set<String> stringSet1 = commitM.broadFeatures(2);
+        Set<String> stringSet3 = commitM.experts(3);
+        List<String> stringSet4 = commitM.busyClasses(3);
+        System.out.println(c);
 
-
-        commitM.componentMinimum(2);
-        Set<Set<String>> s3 = commitM.softwareComponents();
-        System.out.println(s3);
-        commitM.repetionInBugs(3);
-
-        commitM.broadFeatures(2);
-        commitM.experts(5);
-        commitM.busyClasses(2);
+//        commitM.setTimeWindow(0,11);
+//        commitM.componentMinimum(2);
+//        Set<Set<String>> s3 = commitM.softwareComponents();
+//        System.out.println(s3);
+//        commitM.repetionInBugs(3);
+//
+//        commitM.broadFeatures(2);
+//        commitM.experts(5);
+//        commitM.busyClasses(2);
         // commitM.getVertices();
     }
 }
