@@ -17,16 +17,8 @@ public class GraphM {
 
     }
 
-    public void addPath(int vertical, int horizontal){
-        matrix[vertical][horizontal] = matrix[vertical][horizontal]++;
-        matrix[horizontal][vertical] = matrix[horizontal][vertical]++;
-    }
-
     int[][] createGraph(List<Commit> allCommits1){
         Set<String> vertexA = new LinkedHashSet<>();
-
-        //vertexA = getVertex(allCommits1);
-        //List<String> vertexAll = new ArrayList<>(vertexA);
         List<String> vertexAll = getVertex(allCommits1);
         int verticesAll = vertexAll.size();
         int matrix[][] = new int[verticesAll][verticesAll];
@@ -39,57 +31,10 @@ public class GraphM {
                 }
             }
         }
-        System.out.println("Graph: (Adjacency Matrix)");
-        for (int i = 0; i < verticesAll; i++) {
-            for (int j = 0; j <verticesAll ; j++) {
-                System.out.print(matrix[i][j]+ " ");
-            }
-            System.out.println();
-        }
         return matrix;
-        //System.out.println(matrix);
     }
-
-    void createPaths(List<Commit> allCommits2){
-        for(Commit current : allCommits2){
-            Iterator<String> files = current.commitFiles.iterator();
-            while(files.hasNext()){
-
-            }
-        }
-    }
-
-
-
-    static void getVertices(List<Commit> allCommits){
-        Set<String> vertices = new LinkedHashSet<>();
-        for(Commit currentC : allCommits){
-            Iterator<String> files = currentC.commitFiles.iterator();
-            while(files.hasNext()){
-                vertices.add(files.next());
-            }
-
-        }
-        System.out.println(vertices);
-    }
-
-//    Set<String> getVertex(List<Commit> allCommits){
-//        Set<String> vertices = new LinkedHashSet<>();
-//        //String vertices = new String();
-//        //List<String> vertices = new ArrayList<>();
-//        for(Commit currentC : allCommits){
-//            Iterator<String> files = currentC.commitFiles.iterator();
-//            while(files.hasNext()){
-//                vertices.add(files.next());
-//            }
-//        }
-//        return vertices;
-//    }
-
     List<String> getVertex(List<Commit> allCommits){
         Set<String> vertices = new LinkedHashSet<>();
-        //String vertices = new String();
-        //List<String> vertices = new ArrayList<>();
         for(Commit currentC : allCommits){
             Iterator<String> files = currentC.commitFiles.iterator();
             while(files.hasNext()){
@@ -113,19 +58,5 @@ public class GraphM {
         }
         return currentCommits;
     }
-
-
-
-//    void getVertices(){
-//        Set<String> vertices = new LinkedHashSet<>();
-//        for(Commit currentC : allC){
-//            Iterator<String> files = currentC.commitFiles.iterator();
-//            while(files.hasNext()){
-//                vertices.add(files.next());
-//            }
-//
-//        }
-//        System.out.println(vertices);
-//    }
 
 }

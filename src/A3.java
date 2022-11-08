@@ -48,12 +48,12 @@ public class A3 {
         commitM.addCommit("rishi", 12, "F-199",new LinkedHashSet<>(Arrays.asList("A")));
         commitM.setTimeWindow(0,20);
         commitM.clearTimeWindow();
-        commitM.componentMinimum(8);
+        commitM.componentMinimum(9);
         Set<Set<String>> c= commitM.softwareComponents();
         System.out.println(c);
-        Set<String> stringSet = commitM.repetionInBugs(3);
-        Set<String> stringSet1 = commitM.broadFeatures(2);
-        Set<String> stringSet3 = commitM.experts(3);
+        Set<String> stringSet = commitM.repetionInBugs(4);
+        Set<String> stringSet1 = commitM.broadFeatures(1);
+        Set<String> stringSet3 = commitM.experts(2);
         List<String> stringSet4 = commitM.busyClasses(3);
         System.out.println(c);
 
