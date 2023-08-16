@@ -70,6 +70,7 @@ public class CommitManager {
         try{
             int matrix[][];
             List<Commit> currentWindow = g1.getcommit(allC,startTime,endTime);
+            
             List<String> allvertices = g1.getVertex(currentWindow);
             Set<String> individualSet = new LinkedHashSet<>();
             matrix = g1.createGraph(currentWindow);
